@@ -1,0 +1,787 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Panjat Pinang Saraf</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bungee&family=Nunito:wght@400;600;700;800;900&display=swap">
+<style>
+/* Konsep: poster lomba 17-an. Dua pinang berdiri di lapangan, kartu soal bergaya papan cat tepi tebal di sebelahnya (desktop) atau di bawahnya (ponsel). */
+:root{
+  --langit:#BFE7FA; --langit-tua:#6CC3EE;
+  --merah:#D3202A; --merah-tua:#9E1219;
+  --biru:#1565B5; --biru-tua:#0D4580;
+  --kuning:#FFC72C; --kayu:#9C5B2E; --kayu-tua:#6B3A18;
+  --rumput:#4EA94B; --rumput-tua:#2F7D32;
+  --tinta:#1B2638; --abu:#586579; --kulit:#E7B07A;
+  --benar:#1E7A38; --salah:#C62828; --benar-bg:#DDF4E3; --salah-bg:#FBE0E0;
+  --f-display:'Bungee','Impact',sans-serif;
+  --f-body:'Nunito',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--langit);color:var(--tinta);
+  font-family:var(--f-body);font-size:16px;line-height:1.5;
+  padding-block:0 40px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+}
+.wrap{max-width:1120px;margin:0 auto}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* Kepala */
+.top{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;padding-top:16px}
+.kicker{font-weight:800;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--merah-tua)}
+h1{font-family:var(--f-display);font-weight:400;font-size:clamp(26px,5.6vw,46px);line-height:1;margin:4px 0 0;color:var(--merah);text-shadow:2px 2px 0 var(--tinta);text-wrap:balance}
+.bunting{height:46px;margin:4px 0 8px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='46' viewBox='0 0 80 46'%3E%3Cpath d='M0 4Q40 14 80 4' fill='none' stroke='%231B2638' stroke-width='2'/%3E%3Cpath d='M6 5L34 9L20 40Z' fill='%23D3202A' stroke='%231B2638' stroke-width='1.5' stroke-linejoin='round'/%3E%3Cpath d='M46 9L74 5L60 40Z' fill='%23fff' stroke='%231B2638' stroke-width='1.5' stroke-linejoin='round'/%3E%3C/svg%3E") repeat-x left top}
+
+/* Tombol */
+.tombol{font-family:var(--f-display);font-size:15px;letter-spacing:.02em;padding:11px 16px;border:3px solid var(--tinta);border-radius:12px;background:#fff;color:var(--tinta);cursor:pointer;box-shadow:3px 3px 0 var(--tinta);transition:transform .08s,box-shadow .08s}
+.tombol:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--tinta)}
+.tombol:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--tinta)}
+.tombol.utama{background:var(--merah);color:#fff}
+.tombol:disabled{background:#d9dee6;color:#6d7889;cursor:not-allowed;box-shadow:none;transform:none;border-color:#8b95a5}
+.tombol:focus-visible,.op:focus-within,input[type=text]:focus-visible{outline:4px solid var(--kuning);outline-offset:2px}
+.tombol.kecil{font-size:13px;padding:7px 12px}
+
+/* Tata letak */
+.main{display:grid;grid-template-columns:minmax(0,1fr);gap:18px}
+@media(min-width:960px){
+  .main{grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:26px;align-items:start}
+  .kiri{position:sticky;top:12px}
+}
+
+/* HUD pemain */
+.hud{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.pemain{--w:var(--merah);position:relative;display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 8px;align-items:center;padding:8px 10px;background:#fff;border:3px solid var(--tinta);border-radius:12px}
+.pemain.p2{--w:var(--biru)}
+.lencana{font-family:var(--f-display);font-size:13px;color:#fff;background:var(--w);border:2px solid var(--tinta);border-radius:8px;padding:5px 7px;line-height:1}
+.pemain b{display:block;font-weight:900;line-height:1.15;overflow-wrap:anywhere}
+.pemain small{display:block;color:var(--abu);font-size:12px;font-weight:800;line-height:1.2}
+.tinggi{grid-column:1/-1;display:flex;justify-content:space-between;align-items:baseline;border-top:2px dashed #c3cedc;padding-top:4px}
+.tinggi span{font-size:11px;font-weight:800;color:var(--abu);text-transform:uppercase;letter-spacing:.08em}
+.tinggi strong{font-family:var(--f-display);font-weight:400;font-size:20px;color:var(--w);font-variant-numeric:tabular-nums}
+.pemain.aktif{outline:4px solid var(--kuning);outline-offset:1px}
+.pemain.aktif::after{content:"GILIRAN";position:absolute;top:-12px;right:8px;background:var(--kuning);color:var(--tinta);font-family:var(--f-display);font-size:10px;padding:2px 6px;border:2px solid var(--tinta);border-radius:6px}
+
+/* Arena */
+.arena{--h:340px;--tanah:30px;position:relative;height:var(--h);overflow:hidden;border:3px solid var(--tinta);border-radius:14px;background:linear-gradient(var(--langit-tua) 0,var(--langit) 68%,#EAF7FD 100%);box-shadow:5px 5px 0 var(--tinta)}
+@media(min-width:960px){.arena{--h:480px}}
+.k1{--x:24%}.k2{--x:76%}
+.awan{position:absolute;width:70px;height:18px;background:#fff;border-radius:99px;animation:hanyut 14s ease-in-out infinite alternate}
+.awan::before,.awan::after{content:"";position:absolute;background:#fff;border-radius:50%}
+.awan::before{width:34px;height:34px;left:10px;top:-16px}
+.awan::after{width:26px;height:26px;right:10px;top:-10px}
+@keyframes hanyut{to{translate:36px 0}}
+.bukit{position:absolute;left:-10%;right:-10%;bottom:calc(var(--tanah) - 2px);height:80px;background:radial-gradient(ellipse 45% 100% at 22% 100%,#7CC776 96%,transparent 100%),radial-gradient(ellipse 40% 85% at 78% 100%,#63B85F 96%,transparent 100%)}
+.penonton{position:absolute;left:0;right:0;bottom:calc(var(--tanah) - 6px);height:26px;background:
+  radial-gradient(circle at 10px 8px,#2B1B17 5.5px,transparent 6.5px) 15px 0/30px 26px repeat-x,
+  radial-gradient(ellipse 11px 9px at 10px 26px,#fff 95%,transparent 100%) 15px 0/30px 26px repeat-x,
+  radial-gradient(circle at 10px 8px,#2B1B17 5.5px,transparent 6.5px) 0 4px/30px 26px repeat-x,
+  radial-gradient(ellipse 11px 9px at 10px 26px,var(--merah) 95%,transparent 100%) 0 4px/30px 26px repeat-x}
+.tanah{position:absolute;left:0;right:0;bottom:0;height:var(--tanah);background:linear-gradient(var(--rumput) 0 45%,var(--rumput-tua) 45%);border-top:3px solid var(--tinta)}
+.bendera{position:absolute;top:8px;left:50%;width:46px;height:30px;margin-left:-2px}
+.bendera::before{content:"";position:absolute;left:-3px;top:0;width:3px;height:64px;background:var(--tinta)}
+.bendera i{position:absolute;inset:0;border:2px solid var(--tinta);background:linear-gradient(var(--merah) 50%,#fff 50%);transform-origin:left center;animation:kibar 1.6s ease-in-out infinite alternate}
+@keyframes kibar{to{transform:skewY(5deg) scaleX(.93)}}
+
+.pinang{position:absolute;top:48px;bottom:var(--tanah);width:22px;left:calc(var(--x) - 11px)}
+.batang{position:absolute;inset:0;border:2px solid var(--tinta);border-radius:5px 5px 2px 2px;background:linear-gradient(90deg,var(--kayu-tua) 0,var(--kayu) 28%,#CC8E57 50%,var(--kayu) 72%,var(--kayu-tua) 100%);overflow:hidden}
+.batang::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent 0 33px,rgba(0,0,0,.25) 33px 36px)}
+.batang::after{content:"";position:absolute;left:6px;top:0;bottom:0;width:4px;border-radius:4px;background:rgba(255,255,255,.55)}
+.salib{position:absolute;top:36px;width:106px;left:calc(var(--x) - 53px)}
+.salib svg{display:block;width:100%;height:auto}
+
+.garis{position:absolute;left:0;right:0;border-top:2px dashed rgba(255,255,255,.75);bottom:calc(var(--tanah) + 30px + (var(--h) - var(--tanah) - 122px) * var(--y) / 100)}
+.lv{position:absolute;left:50%;translate:-50% 50%;font-family:var(--f-display);font-size:9px;line-height:1;padding:3px 5px;background:#fff;border:2px solid var(--tinta);border-radius:6px;white-space:nowrap;bottom:calc(var(--tanah) + 30px + (var(--h) - var(--tanah) - 122px) * var(--y) / 100)}
+.lv.kini{background:var(--kuning)}
+
+.pemanjat{--baju:var(--merah);position:absolute;width:56px;height:72px;left:calc(var(--x) - 28px);bottom:calc(var(--tanah) - 6px + (var(--h) - var(--tanah) - 122px) * var(--p) / 100);transition:bottom 1s cubic-bezier(.3,1.35,.5,1)}
+.pemanjat.k2{--baju:var(--biru)}
+.pemanjat.licin{transition:bottom .8s cubic-bezier(.55,0,.95,.6)}
+.pemanjat svg{display:block;overflow:visible}
+.badan{transform-origin:50% 90%}
+.pemanjat .baju{fill:var(--baju)}
+.pemanjat .kulit{fill:var(--kulit)}
+.pemanjat .tepi{stroke:var(--tinta);stroke-linecap:round;stroke-linejoin:round;fill:none}
+.pemanjat .kulit-g{stroke:var(--kulit);fill:none;stroke-linecap:round;stroke-linejoin:round}
+.pemanjat .st{stroke:var(--tinta);stroke-width:1.5}
+.pemanjat .tag{position:absolute;left:50%;translate:-50% 0;top:-16px;font-family:var(--f-display);font-size:9px;line-height:1;color:#fff;background:var(--baju);border:2px solid var(--tinta);border-radius:6px;padding:2px 5px}
+.pemanjat.aktif .badan{animation:goyang 1.3s ease-in-out infinite alternate}
+.pemanjat.naik .badan{animation:loncat .7s ease-out}
+.pemanjat.licin .badan{animation:getar .7s ease-in-out}
+@keyframes goyang{from{transform:rotate(-3deg)}to{transform:rotate(3deg)}}
+@keyframes loncat{30%{transform:translateY(-7px) rotate(-5deg)}65%{transform:translateY(0) rotate(4deg)}}
+@keyframes getar{20%{transform:rotate(-9deg)}45%{transform:rotate(8deg)}70%{transform:rotate(-5deg)}}
+.seru{position:absolute;left:50%;bottom:calc(100% + 6px);translate:-50% 0;white-space:nowrap;font-family:var(--f-display);font-size:13px;line-height:1;padding:4px 8px;background:#fff;border:2px solid var(--tinta);border-radius:10px;animation:melayang 1.6s ease-out forwards;z-index:3}
+.seru.ok{background:var(--kuning)}
+.seru.no{background:#fff;color:var(--salah)}
+@keyframes melayang{0%{opacity:0;transform:translateY(8px) scale(.7)}15%{opacity:1;transform:translateY(0) scale(1)}80%{opacity:1}100%{opacity:0;transform:translateY(-18px)}}
+
+/* Panel */
+.panel{background:#fff;border:3px solid var(--tinta);border-radius:16px;box-shadow:6px 6px 0 var(--tinta);padding:18px 16px;min-width:0}
+@media(min-width:600px){.panel{padding:22px 24px}}
+.panel h2{font-family:var(--f-display);font-weight:400;font-size:22px;line-height:1.15;margin:0 0 8px;text-wrap:balance}
+.panel p{margin:0 0 12px}
+.isian{--w:var(--merah);min-width:0;border:3px solid var(--tinta);border-radius:12px;padding:10px 14px 14px;margin:0 0 14px}
+.isian.f2{--w:var(--biru)}
+.isian legend{font-family:var(--f-display);font-size:13px;color:#fff;background:var(--w);padding:4px 10px;border:2px solid var(--tinta);border-radius:8px}
+.baris{display:grid;grid-template-columns:minmax(0,1fr) 110px;gap:10px}
+.f{display:grid;gap:4px;font-weight:800;font-size:13px;min-width:0}
+input[type=text]{font:700 16px var(--f-body);color:var(--tinta);padding:10px 12px;border:2px solid var(--tinta);border-radius:10px;background:#F4F9FE;min-width:0;width:100%}
+.galat{margin:0 0 12px;padding:8px 12px;border:2px solid var(--salah);border-radius:10px;background:var(--salah-bg);color:#8d1b1b;font-weight:800}
+.aturan{margin:18px 0 0;padding:0;list-style:none;display:grid;gap:8px;font-size:14.5px}
+.aturan li{padding-left:18px;position:relative}
+.aturan li::before{content:"";position:absolute;left:0;top:.5em;width:8px;height:8px;background:var(--merah);border:2px solid var(--tinta);border-radius:50%;box-sizing:content-box;margin-left:-2px}
+.tabel-w{overflow-x:auto;margin:14px 0 0}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{border:2px solid var(--tinta);padding:6px 9px;text-align:left;vertical-align:top}
+thead th{background:#EAF2FB;font-weight:900}
+tbody th{font-weight:800;background:#fff}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+
+/* Soal */
+.kepala-soal{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px}
+.lv-pill{font-family:var(--f-display);font-size:15px;background:var(--kuning);border:3px solid var(--tinta);border-radius:10px;padding:4px 10px}
+.lv-nama{font-weight:900}
+.no-soal{margin-left:auto;font-weight:800;font-size:13px;color:var(--abu)}
+.rel{display:flex;gap:8px;margin:10px 0 4px}
+.rel-g{flex:1;display:grid;grid-template-columns:repeat(4,1fr);gap:3px;padding:3px;border:2px solid transparent;border-radius:8px}
+.rel-g.kini{border-color:var(--tinta);background:#FFF6D6}
+.rel-g i{height:10px;border-radius:3px;border:2px solid var(--tinta);background:#fff}
+.rel-g i.b{background:var(--benar)}
+.rel-g i.s{background:var(--salah)}
+.rel-g i.kini{background:var(--kuning)}
+.giliran{--w:var(--merah);display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 10px;margin-top:12px;padding:8px 12px;border:3px solid var(--tinta);border-radius:10px;background:var(--w);color:#fff;font-weight:800}
+.giliran.p2{--w:var(--biru)}
+.giliran .lbl{font-family:var(--f-display);font-size:12px;font-weight:400;letter-spacing:.04em}
+.giliran b{font-weight:900;font-size:17px;overflow-wrap:anywhere}
+.giliran small{font-size:13px;font-weight:700;opacity:.95}
+.jenis{display:inline-block;margin:14px 0 8px;font-weight:900;font-size:12px;letter-spacing:.07em;text-transform:uppercase;background:#EAF2FB;border:2px solid var(--tinta);padding:3px 10px;border-radius:99px}
+.wacana{position:relative;margin:6px 0 14px;padding:14px 12px 10px;border:2px dashed var(--abu);border-radius:10px;background:#F7FAFD;font-size:15.5px;overflow-x:auto}
+.wacana::before{content:"BACAAN";position:absolute;top:-9px;left:10px;background:#fff;padding:0 6px;font-family:var(--f-display);font-size:11px;color:var(--abu)}
+.wacana table{margin:6px 0 2px}
+.tanya{font-size:17px;font-weight:800;line-height:1.4;margin:4px 0 12px}
+.tanya:focus{outline:none}
+.opsi{display:grid;gap:8px}
+.op{position:relative;display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;align-items:start;padding:10px 12px;border:3px solid var(--tinta);border-radius:12px;background:#fff;cursor:pointer;font-weight:600}
+.op input{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:pointer}
+.op input:disabled{cursor:default}
+.op .huruf{display:grid;place-items:center;width:30px;height:30px;border:2px solid var(--tinta);border-radius:50%;font-family:var(--f-display);font-size:13px;background:#fff}
+.opsi.kx .op .huruf{border-radius:8px}
+.op .cap{display:block;margin-top:3px;font-weight:900;font-size:12.5px}
+.op.dipilih{background:#FFF3C4}
+.op.dipilih .huruf{background:var(--kuning)}
+.op.benar{background:var(--benar-bg);border-color:var(--benar)}
+.op.benar .huruf{background:var(--benar);color:#fff;border-color:var(--benar)}
+.op.benar .cap{color:var(--benar)}
+.op.salah{background:var(--salah-bg);border-color:var(--salah)}
+.op.salah .huruf{background:var(--salah);color:#fff;border-color:var(--salah)}
+.op.salah .cap{color:var(--salah)}
+.op.terlewat{background:#fff;border:3px dashed var(--benar)}
+.op.terlewat .cap{color:var(--benar)}
+.bs{display:grid;gap:10px}
+.bs-baris{display:grid;gap:8px;padding:10px 12px;border:3px solid var(--tinta);border-radius:12px;min-width:0}
+.bs-baris p{margin:0;font-weight:600}
+.bs-baris.benar{border-color:var(--benar);background:var(--benar-bg)}
+.bs-baris.salah{border-color:var(--salah);background:var(--salah-bg)}
+.bs-baris .cap{font-weight:900;font-size:12.5px}
+.bs-baris.benar .cap{color:var(--benar)}
+.bs-baris.salah .cap{color:var(--salah)}
+.bs-pilih{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.bs-pilih .op{grid-template-columns:1fr;justify-items:center;text-align:center;padding:8px;font-family:var(--f-display);font-weight:400;font-size:14px}
+.umpan{margin-top:14px;padding:12px 14px;border:3px solid var(--tinta);border-radius:12px;scroll-margin-top:12px}
+.umpan.ok{background:var(--benar-bg);border-color:var(--benar)}
+.umpan.no{background:var(--salah-bg);border-color:var(--salah)}
+.umpan h4{margin:0 0 4px;font-family:var(--f-display);font-weight:400;font-size:17px;line-height:1.25}
+.umpan p{margin:0;font-size:15px}
+.aksi{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+
+/* Hasil */
+.juara{display:grid;gap:4px;margin:4px 0 14px;padding:14px;border:3px solid var(--tinta);border-radius:12px;background:var(--kuning)}
+.juara .kecil{font-family:var(--f-display);font-size:12px}
+.juara .nama{font-family:var(--f-display);font-size:clamp(22px,4vw,30px);line-height:1.1;overflow-wrap:anywhere}
+.juara .ket{font-weight:700}
+.mk{display:inline-grid;place-items:center;width:24px;height:24px;margin-right:4px;border:2px solid var(--tinta);border-radius:6px;font-weight:900;font-size:14px;line-height:1}
+.mk.ok{background:var(--benar);color:#fff}
+.mk.no{background:var(--salah);color:#fff}
+.salin{width:100%;margin-top:12px;min-height:110px;font:600 14px/1.4 var(--f-body);padding:8px;border:2px solid var(--tinta);border-radius:10px}
+#konfeti{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:50}
+.info-kecil{margin-top:12px;font-size:13px;color:var(--abu);font-weight:700}
+
+@media(max-width:420px){
+  .baris{grid-template-columns:minmax(0,1fr) 90px}
+  .pemain b{font-size:14px}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition-duration:.01ms!important}
+}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"></svg>
+
+<div class="wrap">
+  <header class="top">
+    <div>
+      <div class="kicker">IPA Kelas 9 · Sistem Saraf</div>
+      <h1>Panjat Pinang Saraf</h1>
+    </div>
+    <button type="button" class="tombol kecil" id="btnSuara" aria-pressed="true">Suara: Nyala</button>
+  </header>
+  <div class="bunting" aria-hidden="true"></div>
+
+  <div class="main">
+    <section class="kiri" aria-label="Arena lomba">
+      <div class="hud">
+        <div class="pemain p1" id="hud1">
+          <span class="lencana">P1</span>
+          <div><b id="hn1">Pemain 1</b><small id="hk1">Kelas -</small></div>
+          <div class="tinggi"><span>Tinggi</span><strong id="ht1">0,0 m</strong></div>
+        </div>
+        <div class="pemain p2" id="hud2">
+          <span class="lencana">P2</span>
+          <div><b id="hn2">Pemain 2</b><small id="hk2">Kelas -</small></div>
+          <div class="tinggi"><span>Tinggi</span><strong id="ht2">0,0 m</strong></div>
+        </div>
+      </div>
+
+      <div class="arena" id="arena" aria-hidden="true">
+        <div class="awan" style="top:44px;left:4%;animation-duration:16s"></div>
+        <div class="awan" style="top:92px;left:56%;animation-duration:22s;scale:.8"></div>
+        <div class="bukit"></div>
+        <div class="penonton"></div>
+        <div class="tanah"></div>
+        <div class="bendera"><i></i></div>
+
+        <div class="pinang k1"><div class="batang"></div></div>
+        <div class="pinang k2"><div class="batang"></div></div>
+
+        <div class="salib k1" id="salib1"></div>
+        <div class="salib k2" id="salib2"></div>
+
+        <div id="tagLevel"></div>
+
+        <div class="pemanjat k1" id="pm1" style="--p:0"><span class="tag">P1</span><div class="badan" data-svg></div></div>
+        <div class="pemanjat k2" id="pm2" style="--p:0"><span class="tag">P2</span><div class="badan" data-svg></div></div>
+      </div>
+    </section>
+
+    <div class="kanan">
+      <!-- Pendaftaran -->
+      <section class="panel" id="panelMulai">
+        <h2>Daftar Pemain</h2>
+        <p>Dua pemain berebut hadiah di puncak pinang. Jawaban benar membuat pemanjat naik. Jawaban salah membuatnya tergelincir.</p>
+        <form id="form" novalidate>
+          <fieldset class="isian f1">
+            <legend>Pemain 1 · Merah</legend>
+            <div class="baris">
+              <label class="f" for="nama1">Nama<input type="text" id="nama1" maxlength="26" autocomplete="off" placeholder="Nama lengkap"></label>
+              <label class="f" for="kelas1">Kelas<input type="text" id="kelas1" maxlength="8" autocomplete="off" placeholder="mis. 9A"></label>
+            </div>
+          </fieldset>
+          <fieldset class="isian f2">
+            <legend>Pemain 2 · Biru</legend>
+            <div class="baris">
+              <label class="f" for="nama2">Nama<input type="text" id="nama2" maxlength="26" autocomplete="off" placeholder="Nama lengkap"></label>
+              <label class="f" for="kelas2">Kelas<input type="text" id="kelas2" maxlength="8" autocomplete="off" placeholder="mis. 9B"></label>
+            </div>
+          </fieldset>
+          <p class="galat" id="galat" role="alert" hidden></p>
+          <button type="submit" class="tombol utama" id="btnMulai">Mulai Lomba</button>
+        </form>
+
+        <ul class="aturan">
+          <li>Pemain bergiliran: P1, P2, P1, P2. Setiap pemain mendapat soal yang berbeda, jadi mengintip tidak membantu.</li>
+          <li>Ada 5 level dengan 4 soal per level, sehingga tiap pemain menjawab 10 soal. Bentuk soal: pilihan ganda, pilih semua jawaban yang benar, dan benar atau salah.</li>
+          <li>Tinggi pinang 10 meter. Pemain yang paling tinggi setelah soal terakhir menjadi juara. Jawaban salah membuat pemanjat merosot 0,4 m di semua level.</li>
+        </ul>
+        <div class="tabel-w">
+          <table>
+            <thead><tr><th>Level</th><th>Tema</th><th>Jika benar</th></tr></thead>
+            <tbody id="tabelLevel"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Soal -->
+      <section class="panel" id="panelSoal" hidden>
+        <div class="kepala-soal">
+          <span class="lv-pill" id="lvPill">LEVEL 1</span>
+          <span class="lv-nama" id="lvNama"></span>
+          <span class="no-soal" id="noSoal"></span>
+        </div>
+        <div class="rel" id="rel" aria-hidden="true"></div>
+        <div class="giliran p1" id="giliran"><span class="lbl">GILIRAN</span><b id="gNama"></b><small id="gKelas"></small></div>
+        <span class="jenis" id="jenis"></span>
+        <div class="wacana" id="wacana" hidden></div>
+        <h3 class="tanya" id="tanya" tabindex="-1"></h3>
+        <div id="opsi" class="opsi"></div>
+        <div id="umpan" class="umpan" role="status" hidden></div>
+        <div class="aksi">
+          <button type="button" class="tombol utama" id="btnKunci" disabled>Kunci Jawaban</button>
+          <button type="button" class="tombol" id="btnLanjut" hidden>Lanjut</button>
+        </div>
+      </section>
+
+      <!-- Hasil -->
+      <section class="panel" id="panelHasil" hidden>
+        <h2>Hasil Lomba</h2>
+        <div class="juara" id="juara"></div>
+        <div class="tabel-w">
+          <table id="rekap"></table>
+        </div>
+        <div class="aksi">
+          <button type="button" class="tombol utama" id="btnUlang">Main Lagi</button>
+          <button type="button" class="tombol" id="btnGanti">Ganti Pemain</button>
+          <button type="button" class="tombol" id="btnSalin">Salin Hasil</button>
+        </div>
+        <textarea class="salin" id="salinArea" readonly hidden aria-label="Teks hasil lomba"></textarea>
+        <p class="info-kecil">Ambil tangkapan layar halaman ini untuk dikumpulkan ke guru.</p>
+      </section>
+    </div>
+  </div>
+</div>
+<canvas id="konfeti" aria-hidden="true"></canvas>
+
+<script>
+(function(){
+'use strict';
+const $=(s,r)=>(r||document).querySelector(s);
+const $$=(s,r)=>Array.from((r||document).querySelectorAll(s));
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt=v=>(Math.round(v*10)/10).toFixed(1).replace('.',',');
+const meter=pos=>fmt(pos/10);
+const reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches;
+const sempit=()=>window.matchMedia('(max-width:959px)').matches;
+const SLIP=4;
+const POSLV=[16,34,54,76,100];
+
+const tb=(h,rows)=>'<table><thead><tr>'+h.map(x=>'<th>'+x+'</th>').join('')+'</tr></thead><tbody>'+rows.map(r=>'<tr>'+r.map(x=>'<td>'+x+'</td>').join('')+'</tr>').join('')+'</tbody></table>';
+
+/* ---------- Bank soal: 5 level x 4 soal (urutan giliran P1, P2, P1, P2) ---------- */
+const LEVEL=[
+{nama:'Mengenal Neuron',naik:8,soal:[
+ {t:'pg',q:'Sebuah neuron memiliki akson yang sangat panjang dan dibungkus selubung mielin. Mengapa susunan ini menguntungkan bagi tubuh?',
+  o:['Selubung mielin membantu impuls merambat lebih cepat sehingga pesan sampai ke sasaran yang jauh dalam waktu singkat.','Selubung mielin menyimpan cadangan makanan agar akson tidak pernah kelelahan.','Selubung mielin mengubah impuls listrik menjadi zat kimia sebelum dikirim.','Selubung mielin menerima rangsang dari lingkungan luar tubuh.'],k:0,
+  p:'Mielin adalah selubung berlemak yang membungkus akson. Impuls melompat dari satu nodus Ranvier ke nodus berikutnya, sehingga perambatannya lebih cepat. Akson panjang tanpa mielin akan menghantarkan pesan jauh lebih lambat.'},
+ {t:'pg',q:'Seorang pasien mengalami kerusakan pada neuron sensorik di kulit ujung jari tangan kanannya. Otot dan neuron motorik lengannya sehat. Gejala yang paling mungkin muncul adalah ...',
+  o:['jari tidak dapat merasakan sentuhan atau suhu, tetapi lengan masih dapat digerakkan','jari masih dapat merasakan sentuhan, tetapi lengan tidak dapat digerakkan','jari tidak dapat merasakan sentuhan dan lengan juga tidak dapat digerakkan','lengan bergerak sendiri tanpa perintah dari otak'],k:0,
+  p:'Neuron sensorik membawa impuls dari reseptor (kulit) ke pusat saraf, sedangkan neuron motorik membawa perintah ke otot. Karena yang rusak hanya jalur sensorik, kemampuan merasa hilang, tetapi jalur gerak tetap bekerja.'},
+ {t:'bs',q:'Tentukan benar atau salah setiap pernyataan tentang jenis neuron berikut.',
+  o:['Neuron motorik membawa impuls dari sumsum tulang belakang atau otak ke otot.','Neuron sensorik membawa impuls dari pusat saraf ke efektor.','Neuron asosiasi (interneuron) terdapat di dalam otak dan sumsum tulang belakang.'],k:[true,false,true],
+  p:'Neuron sensorik membawa impuls dari reseptor ke pusat saraf, bukan sebaliknya. Impuls dari pusat saraf ke efektor (otot atau kelenjar) dibawa neuron motorik. Neuron asosiasi menghubungkan neuron sensorik dan motorik di dalam pusat saraf.'},
+ {t:'kx',q:'Pilih semua pernyataan yang menunjukkan hubungan struktur dan fungsi neuron dengan tepat.',
+  o:['Dendrit bercabang banyak sehingga permukaan penerima impuls menjadi luas.','Akson yang panjang memungkinkan impuls dihantarkan jauh dari badan sel.','Badan sel memiliki inti yang mengendalikan kegiatan sel neuron.','Nodus Ranvier menghambat impuls agar tidak merambat terlalu cepat.'],k:[0,1,2],
+  p:'Dendrit menerima impuls, akson menghantarkannya, dan badan sel (berisi inti) mengendalikan aktivitas neuron. Nodus Ranvier justru memungkinkan impuls melompat sehingga perambatan lebih cepat.'}
+]},
+{nama:'Jalur Refleks',naik:9,soal:[
+ {t:'pg',w:'Dina tidak sengaja menginjak paku kecil. Kakinya langsung terangkat sebelum ia merasakan sakit.',q:'Urutan jalur impuls yang paling tepat pada peristiwa tersebut adalah ...',
+  o:['reseptor kulit → neuron sensorik → sumsum tulang belakang → neuron motorik → otot kaki','reseptor kulit → neuron sensorik → otak besar → neuron motorik → otot kaki','reseptor kulit → neuron motorik → sumsum tulang belakang → neuron sensorik → otot kaki','otot kaki → neuron sensorik → sumsum tulang belakang → neuron motorik → reseptor kulit'],k:0,
+  p:'Pada gerak refleks, impuls dari reseptor dibawa neuron sensorik ke sumsum tulang belakang, lalu langsung dibalas lewat neuron motorik ke otot (efektor). Karena tidak menunggu pengolahan di otak, kaki terangkat lebih dulu. Rasa sakit baru terasa ketika impuls sampai ke otak.'},
+ {t:'pg',q:'Perbedaan yang tepat antara gerak refleks (menarik tangan dari api) dan gerak sadar (mengambil buku di meja) adalah ...',
+  o:['gerak refleks diolah di sumsum tulang belakang tanpa menunggu perintah otak, sedangkan gerak sadar diolah di otak sehingga lebih lambat','gerak refleks tidak melibatkan neuron motorik, sedangkan gerak sadar melibatkan neuron motorik','gerak refleks selalu dimulai dari perintah otak besar, sedangkan gerak sadar tidak','gerak refleks hanya terjadi saat tidur, sedangkan gerak sadar terjadi saat terjaga'],k:0,
+  p:'Jalur refleks lebih pendek karena tidak melewati otak sebagai pusat pengolahan, sehingga responsnya sangat cepat. Gerak sadar dimulai dari keputusan di otak besar. Keduanya tetap memakai neuron motorik untuk menggerakkan otot.'},
+ {t:'kx',w:'Seorang atlet menginjak pecahan kaca. Ia merasakan sakit yang hebat, tetapi kakinya tidak dapat ditarik menjauh.',q:'Pilih semua penyebab yang paling mungkin.',
+  o:['Neuron motorik yang menuju otot kaki mengalami kerusakan.','Reseptor nyeri di telapak kaki tidak berfungsi.','Otot kaki (efektor) lumpuh sehingga tidak dapat menanggapi perintah.','Neuron sensorik tidak dapat membawa impuls dari kulit ke sumsum tulang belakang.'],k:[0,2],
+  p:'Karena rasa sakit terasa, reseptor dan jalur sensorik masih utuh sampai ke otak. Masalah ada di sisi keluaran: neuron motorik atau otot sebagai efektor yang tidak dapat menjalankan perintah.'},
+ {t:'bs',w:'Perhatikan tiga peristiwa: (1) berkedip ketika debu masuk ke mata, (2) menulis nama di buku, (3) pupil mengecil ketika terkena cahaya terang.',q:'Tentukan benar atau salah setiap pernyataan.',
+  o:['Berkedip ketika debu masuk ke mata termasuk gerak refleks.','Menulis nama di buku termasuk gerak refleks karena sudah terbiasa sehingga tidak dipikirkan.','Mengecilnya pupil di tempat terang termasuk gerak refleks.'],k:[true,false,true],
+  p:'Menulis adalah gerak sadar: dikendalikan otak besar dan dilakukan dengan kehendak, walaupun sudah terlatih. Berkedip karena debu dan mengecilnya pupil terjadi otomatis sebagai tanggapan cepat terhadap rangsang, sehingga termasuk refleks.'}
+]},
+{nama:'Peta Otak',naik:10,soal:[
+ {t:'pg',w:'Seorang pengendara motor terbentur di bagian belakang bawah kepala. Setelah sadar, ia sulit menjaga keseimbangan dan gerak tangannya tidak terkoordinasi. Ia tetap dapat berpikir dan berbicara dengan jelas.',q:'Bagian otak yang paling mungkin terganggu adalah ...',
+  o:['otak kecil (serebelum)','otak besar (serebrum)','sumsum lanjutan (medula oblongata)','sumsum tulang belakang'],k:0,
+  p:'Otak kecil terletak di bagian belakang bawah dan mengatur keseimbangan serta koordinasi gerak otot. Kemampuan berpikir dan berbicara yang masih baik menunjukkan otak besar bekerja normal.'},
+ {t:'pg',w:'Tiga pasien datang ke dokter saraf.'+tb(['Pasien','Gejala'],[['X','Sulit mengingat pelajaran dan sulit berbicara'],['Y','Detak jantung dan pernapasan tidak teratur'],['Z','Sulit menjaga keseimbangan saat berjalan']]),q:'Pasangan pasien dan bagian otak yang terganggu yang paling tepat adalah ...',
+  o:['X – otak besar; Y – sumsum lanjutan; Z – otak kecil','X – otak kecil; Y – otak besar; Z – sumsum lanjutan','X – sumsum lanjutan; Y – otak kecil; Z – otak besar','X – otak besar; Y – otak kecil; Z – sumsum lanjutan'],k:0,
+  p:'Otak besar mengatur pikiran, ingatan, dan bicara. Sumsum lanjutan mengatur kegiatan tak sadar seperti detak jantung dan pernapasan. Otak kecil mengatur keseimbangan dan koordinasi gerak.'},
+ {t:'bs',w:'Setelah kecelakaan, seorang pasien lumpuh pada kedua kaki. Ia masih dapat berbicara, mengingat, dan menggerakkan kedua tangannya.',q:'Tentukan benar atau salah setiap pernyataan.',
+  o:['Kemampuan berbicara dan mengingat yang masih baik menunjukkan otak besar masih berfungsi.','Kelumpuhan kedua kaki menunjukkan neuron sensorik di kedua tangan rusak.','Kerusakan lebih mungkin berada di sumsum tulang belakang daripada di otak besar.'],k:[true,false,true],
+  p:'Bicara dan ingatan dikendalikan otak besar, jadi bagian itu masih baik. Tangan yang bergerak normal menunjukkan jalur saraf ke tangan utuh. Hilangnya fungsi hanya pada kaki menunjukkan jalur saraf antara otak dan kaki di sumsum tulang belakang kemungkinan terputus.'},
+ {t:'kx',w:'Bima bermain sepak bola. Ia memutuskan menendang bola ke sudut gawang, berlari kencang, dan napas serta detak jantungnya meningkat.',q:'Pilih semua pernyataan yang tepat tentang peran bagian sistem saraf dalam peristiwa itu.',
+  o:['Otak besar berperan dalam memutuskan arah tendangan.','Otak kecil menjaga keseimbangan tubuhnya saat berlari dan menendang.','Sumsum lanjutan ikut mengatur perubahan detak jantung dan pernapasan.','Sumsum tulang belakang menyimpan ingatan tentang strategi permainan.'],k:[0,1,2],
+  p:'Keputusan dan ingatan strategi ditangani otak besar, keseimbangan oleh otak kecil, dan kegiatan tak sadar seperti detak jantung serta pernapasan oleh sumsum lanjutan. Sumsum tulang belakang tidak menyimpan ingatan. Ia menghubungkan otak dengan tubuh dan mengatur refleks.'}
+]},
+{nama:'Saraf Otonom',naik:11,soal:[
+ {t:'pg',w:'Raka dikejar anjing. Jantungnya berdetak lebih cepat, pupil matanya melebar, dan kerja pencernaannya melambat. Setelah merasa aman, kondisi tubuhnya berangsur normal kembali.',q:'Analisis yang paling tepat tentang peristiwa tersebut adalah ...',
+  o:['Saraf simpatik aktif saat Raka terancam, lalu saraf parasimpatik memulihkan tubuhnya ke keadaan tenang.','Saraf parasimpatik aktif saat Raka terancam, lalu saraf simpatik memulihkan tubuhnya ke keadaan tenang.','Saraf somatik mengatur seluruh perubahan karena Raka menyadarinya.','Hanya otak besar yang bekerja, saraf otonom tidak terlibat.'],k:0,
+  p:'Saraf otonom bekerja di luar kehendak. Saraf simpatik menyiapkan tubuh menghadapi bahaya (jantung cepat, pupil melebar, pencernaan melambat), sedangkan saraf parasimpatik memulihkan tubuh ke keadaan tenang.'},
+ {t:'pg',w:'Perubahan organ pada dua keadaan, P dan Q.'+tb(['Organ','Keadaan P','Keadaan Q'],[['Detak jantung','Cepat','Lambat'],['Pupil mata','Melebar','Mengecil'],['Kerja usus','Menurun','Meningkat']]),q:'Keadaan P dan Q paling mungkin berturut-turut terjadi saat ...',
+  o:['berlari menghindari bahaya dan beristirahat setelah makan','beristirahat setelah makan dan berlari menghindari bahaya','tidur nyenyak dan mengikuti lomba lari','membaca di tempat tenang dan terkejut melihat ular'],k:0,
+  p:'Keadaan P (jantung cepat, pupil melebar, usus melambat) menunjukkan kerja saraf simpatik saat tubuh siaga. Keadaan Q (jantung lambat, pupil mengecil, usus aktif) menunjukkan kerja saraf parasimpatik saat tubuh santai, misalnya beristirahat setelah makan.'},
+ {t:'kx',q:'Pilih semua contoh kegiatan yang dikendalikan saraf otonom (di luar kehendak).',
+  o:['Gerak peristaltik usus yang mendorong makanan','Mengangkat tangan untuk menjawab pertanyaan guru','Pupil mata mengecil ketika berada di tempat terang','Detak jantung yang melambat saat tidur'],k:[0,2,3],
+  p:'Saraf otonom mengatur organ dalam dan kegiatan yang berjalan sendiri: peristaltik usus, ukuran pupil, dan detak jantung. Mengangkat tangan adalah gerak sadar yang diatur saraf somatik.'},
+ {t:'bs',w:'Sistem saraf tepi terdiri atas saraf somatik dan saraf otonom. Saraf tepi menghubungkan pusat saraf (otak dan sumsum tulang belakang) dengan seluruh bagian tubuh.',q:'Tentukan benar atau salah setiap pernyataan.',
+  o:['Mengangkat gelas dengan sengaja dikendalikan oleh saraf somatik.','Saraf otonom dapat dikendalikan sepenuhnya sesuai kehendak.','Saraf tepi menghubungkan pusat saraf dengan reseptor dan efektor.'],k:[true,false,true],
+  p:'Saraf somatik mengatur gerak sadar otot rangka. Saraf otonom bekerja di luar kehendak, jadi tidak dapat dikendalikan sepenuhnya. Saraf tepi memang menjadi penghubung antara pusat saraf dan reseptor serta efektor.'}
+]},
+{nama:'Penalaran Lanjut',naik:12,soal:[
+ {t:'pg',w:'Peneliti menguji waktu reaksi tiga siswa sehat. Penggaris dijatuhkan tanpa aba-aba dan siswa menangkapnya secepat mungkin. Semakin pendek jarak jatuh penggaris sebelum tertangkap, semakin cepat reaksinya.'+tb(['Siswa','Jarak jatuh'],[['Andi','8 cm'],['Budi','15 cm'],['Cici','22 cm']]),q:'Kesimpulan yang paling tepat adalah ...',
+  o:['Andi bereaksi paling cepat, sehingga impuls dari mata ke otak lalu ke otot tangannya merambat dan diolah paling cepat.','Cici bereaksi paling cepat karena penggaris jatuh paling jauh sebelum ia tangkap.','Budi memiliki neuron motorik yang rusak karena jaraknya berada di tengah.','Data tidak dapat dipakai karena menangkap penggaris adalah gerak refleks yang tidak melibatkan otak.'],k:0,
+  p:'Jarak jatuh terpendek berarti waktu reaksi tersingkat. Menangkap penggaris adalah gerak sadar: mata (reseptor) → neuron sensorik → otak → neuron motorik → otot tangan. Perbedaan jarak hanya menunjukkan perbedaan kecepatan respons, bukan kerusakan saraf.'},
+ {t:'pg',w:'Antara ujung akson sebuah neuron dan dendrit neuron berikutnya terdapat celah sempit yang disebut sinapsis. Impuls listrik tidak dapat melompati celah itu. Ujung akson melepaskan zat kimia (neurotransmiter) yang menyeberangi celah dan merangsang dendrit di seberangnya.',q:'Sebuah obat menghambat pelepasan neurotransmiter dari ujung akson. Dampak yang paling mungkin adalah ...',
+  o:['impuls tidak dapat diteruskan ke neuron berikutnya sehingga tanggapan tubuh terhambat','impuls merambat lebih cepat melewati sinapsis','impuls berbalik arah dari dendrit menuju akson','badan sel neuron berikutnya menjadi lebih aktif'],k:0,
+  p:'Tanpa neurotransmiter, tidak ada zat penghantar yang menyeberangi sinapsis, sehingga impuls berhenti di ujung akson. Sinapsis juga membuat impuls hanya berjalan satu arah, dari akson ke dendrit.'},
+ {t:'kx',w:'Seorang nenek tiba-tiba mengalami wajah miring ke satu sisi, tangan kanan lemas, dan bicara menjadi pelo. Dokter menduga stroke, yaitu gangguan aliran darah ke sebagian otak.',q:'Pilih semua analisis yang tepat.',
+  o:['Gejala mendadak sesuai dengan terhambatnya aliran darah sehingga sel saraf di sebagian otak kekurangan oksigen.','Lemasnya tangan menunjukkan neuron di bagian otak pengatur gerak tangan tidak bekerja normal.','Bicara pelo menunjukkan sumsum tulang belakang bagian leher terputus total.','Wajah miring menunjukkan reseptor di kulit wajah rusak sehingga tidak dapat merasakan sentuhan.'],k:[0,1],
+  p:'Sel saraf sangat bergantung pada oksigen dari darah. Bila aliran darah ke bagian otak terganggu, fungsi bagian itu menurun dan muncul gejala sesuai tugasnya (gerak tangan, otot wajah, bicara). Wajah miring terjadi karena kendali otot wajah terganggu, bukan karena reseptor kulit. Bicara pelo tidak berarti sumsum tulang belakang terputus.'},
+ {t:'bs',w:'Perbandingan pengendali tubuh.'+tb(['Pengendali','Pembawa pesan','Kecepatan','Lama efek'],[['Saraf','Impuls listrik dan neurotransmiter','Cepat','Singkat'],['Hormon','Zat kimia yang diedarkan darah','Lebih lambat','Lebih lama']]),q:'Tentukan benar atau salah setiap pernyataan.',
+  o:['Reaksi cepat dan singkat ketika terkejut lebih sesuai diatur sistem saraf.','Pertumbuhan tinggi badan selama bertahun-tahun lebih sesuai diatur impuls listrik saraf daripada hormon.','Pesan hormon dibawa darah sehingga kerjanya lebih lambat, tetapi pengaruhnya dapat bertahan lebih lama.'],k:[true,false,true],
+  p:'Saraf cocok untuk tanggapan cepat dan singkat. Pertumbuhan adalah proses panjang yang diatur hormon, yang diedarkan lewat darah sehingga bekerja lebih lambat tetapi efeknya lebih lama.'}
+]}
+];
+const JENIS={pg:'Pilih satu jawaban yang paling tepat',kx:'Pilih semua jawaban yang benar',bs:'Tentukan benar atau salah tiap pernyataan'};
+
+/* ---------- Grafis ---------- */
+const SVG_PM='<svg viewBox="0 0 56 72" width="56" height="72" aria-hidden="true">'
++'<g class="tepi" stroke-width="8"><path d="M23 46L14 57L21 65"/><path d="M33 46L42 57L35 65"/></g>'
++'<g class="kulit-g" stroke-width="5"><path d="M23 46L14 57L21 65"/><path d="M33 46L42 57L35 65"/></g>'
++'<circle cx="21" cy="66" r="3.4" class="kulit st"/><circle cx="35" cy="66" r="3.4" class="kulit st"/>'
++'<rect x="19" y="39" width="18" height="10" rx="3" fill="#263248" class="st"/>'
++'<rect x="18" y="22" width="20" height="21" rx="6" class="baju st"/>'
++'<rect x="18" y="30" width="20" height="4" fill="#fff"/>'
++'<g class="tepi" stroke-width="7.5"><path d="M20 27Q11 22 16 11"/><path d="M36 27Q45 22 40 11"/></g>'
++'<g class="kulit-g" stroke-width="4.8"><path d="M20 27Q11 22 16 11"/><path d="M36 27Q45 22 40 11"/></g>'
++'<circle cx="16" cy="10.5" r="3.2" class="kulit st"/><circle cx="40" cy="10.5" r="3.2" class="kulit st"/>'
++'<circle cx="28" cy="15" r="8.5" class="kulit st"/>'
++'<path d="M19.8 13Q28 3 36.2 13Q28 8.5 19.8 13Z" fill="#2B1B17"/>'
++'<path d="M20 11.5Q28 6 36 11.5L36 14Q28 9.5 20 14Z" fill="#D3202A"/>'
++'<path d="M28 7.2Q32.5 8 36 11.5L36 14Q32.5 10.5 28 9.7Z" fill="#fff"/>'
++'<circle cx="25" cy="17" r="1.1" fill="#1B2638"/><circle cx="31" cy="17" r="1.1" fill="#1B2638"/>'
++'<path d="M25.5 20Q28 22 30.5 20" fill="none" stroke="#1B2638" stroke-width="1.2" stroke-linecap="round"/>'
++'</svg>';
+
+const SVG_SALIB='<svg viewBox="0 0 124 70" aria-hidden="true">'
++'<g stroke="#1B2638" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round">'
++'<path d="M22 14V27M62 14V29M102 14V28" fill="none"/>'
++'<rect x="2" y="6" width="120" height="8" rx="3" fill="#9C5B2E"/>'
+/* kaos */
++'<path d="M8 31L16 27Q22 32 28 27L36 31L32 39L29 37V57H15V37L12 39Z" fill="#D3202A"/>'
+/* televisi */
++'<path d="M62 31L54 23M62 31L70 23" fill="none"/>'
++'<rect x="47" y="31" width="30" height="22" rx="3" fill="#3A4A63"/>'
++'<rect x="51" y="35" width="22" height="14" rx="1.5" fill="#9FE3FF"/>'
++'<path d="M54 56H70" fill="none"/>'
+/* sepeda */
++'<circle cx="91" cy="49" r="8" fill="none"/><circle cx="115" cy="49" r="8" fill="none"/>'
++'<path d="M91 49L100 37L109 49H115M100 37H107L109 49M96 35H103M107 37L110 33" fill="none" stroke="#D3202A" stroke-width="2.2"/>'
++'</g></svg>';
+
+/* ---------- Bunyi ---------- */
+let ac=null,suaraOn=true;
+function initAudio(){try{if(!ac){const A=window.AudioContext||window.webkitAudioContext;if(A)ac=new A()}if(ac&&ac.state==='suspended')ac.resume()}catch(e){}}
+function nada(urut,dur,tipe,vol){
+  if(!suaraOn||!ac)return;
+  try{
+    const t0=ac.currentTime+.02;
+    urut.forEach((f,i)=>{
+      const o=ac.createOscillator(),g=ac.createGain();
+      o.type=tipe;o.frequency.value=f;
+      g.gain.setValueAtTime(0,t0+i*dur);
+      g.gain.linearRampToValueAtTime(vol,t0+i*dur+.015);
+      g.gain.exponentialRampToValueAtTime(.0001,t0+i*dur+dur*.95);
+      o.connect(g);g.connect(ac.destination);
+      o.start(t0+i*dur);o.stop(t0+i*dur+dur);
+    });
+  }catch(e){}
+}
+const bunyiBenar=()=>nada([523,659,784],.1,'square',.05);
+const bunyiSalah=()=>nada([330,262,196],.14,'sawtooth',.05);
+const bunyiMenang=()=>nada([523,659,784,1047,784,1047],.13,'square',.05);
+
+/* ---------- Status ---------- */
+let S=null;
+const cur=()=>{const lv=Math.floor(S.t/4),qi=S.t%4;return{lv,qi,pi:qi%2,soal:LEVEL[lv].soal[qi]}};
+
+function hud(){
+  [0,1].forEach(i=>{
+    const n=i+1;
+    const nama=S?S.pl[i].nama:($('#nama'+n).value.trim()||'Pemain '+n);
+    const kelas=S?S.pl[i].kelas:$('#kelas'+n).value.trim();
+    $('#hn'+n).textContent=nama;
+    $('#hk'+n).textContent='Kelas '+(kelas||'-');
+    $('#ht'+n).textContent=meter(S?S.pl[i].pos:0)+' m';
+  });
+}
+function aktifkan(pi){
+  [0,1].forEach(i=>{
+    $('#hud'+(i+1)).classList.toggle('aktif',i===pi);
+    $('#pm'+(i+1)).classList.toggle('aktif',i===pi);
+  });
+}
+
+function bangunArena(){
+  $('#salib1').innerHTML=SVG_SALIB;$('#salib2').innerHTML=SVG_SALIB;
+  $$('[data-svg]').forEach(e=>{e.innerHTML=SVG_PM});
+  $('#tagLevel').innerHTML=POSLV.map((y,i)=>'<div class="garis" style="--y:'+y+'"></div><div class="lv" data-lv="'+i+'" style="--y:'+y+'">LV '+(i+1)+'</div>').join('');
+  $('#tabelLevel').innerHTML=LEVEL.map((l,i)=>'<tr><th scope="row">'+(i+1)+'</th><td>'+l.nama+'</td><td class="num">+'+fmt(l.naik/10)+' m</td></tr>').join('');
+}
+
+function rel(){
+  const r=$('#rel');r.innerHTML='';
+  const kini=cur();
+  for(let l=0;l<5;l++){
+    const g=document.createElement('div');g.className='rel-g'+(l===kini.lv?' kini':'');
+    for(let q=0;q<4;q++){
+      const t=l*4+q,h=S.hasil[t],c=document.createElement('i');
+      c.className=(h===true?'b':h===false?'s':'')+(t===S.t&&S.fase==='tanya'?' kini':'');
+      g.appendChild(c);
+    }
+    r.appendChild(g);
+  }
+}
+
+/* ---------- Alur permainan ---------- */
+function tampil(id){['panelMulai','panelSoal','panelHasil'].forEach(p=>{$('#'+p).hidden=(p!==id)})}
+
+function mulai(d){
+  S={pl:d.map(p=>({nama:p.nama,kelas:p.kelas,pos:0,benar:0})),t:0,hasil:[],fase:'tanya'};
+  [1,2].forEach(n=>{const e=$('#pm'+n);e.classList.remove('naik','licin');e.style.setProperty('--p',0)});
+  hud();tampil('panelSoal');tanya();
+  if(sempit())$('#panelSoal').scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'});
+}
+
+function tanya(){
+  const {lv,qi,pi,soal}=cur();
+  S.fase='tanya';
+  $('#lvPill').textContent='LEVEL '+(lv+1);
+  $('#lvNama').textContent=LEVEL[lv].nama;
+  $('#noSoal').textContent='Soal '+(S.t+1)+' dari 20';
+  const g=$('#giliran');g.className='giliran p'+(pi+1);
+  $('#gNama').textContent=S.pl[pi].nama;
+  $('#gKelas').textContent='Kelas '+S.pl[pi].kelas;
+  $('#jenis').textContent=JENIS[soal.t];
+  const w=$('#wacana');
+  if(soal.w){w.innerHTML=soal.w;w.hidden=false}else{w.hidden=true;w.innerHTML=''}
+  $('#tanya').textContent=soal.q;
+  const o=$('#opsi');o.className='opsi '+soal.t;o.innerHTML='';
+  if(soal.t==='pg'||soal.t==='kx'){
+    const tipe=soal.t==='pg'?'radio':'checkbox';
+    soal.o.forEach((teks,i)=>{
+      const lab=document.createElement('label');lab.className='op';
+      lab.innerHTML='<input type="'+tipe+'" name="jwb" value="'+i+'"><span class="huruf">'+'ABCD'[i]+'</span><span class="teks">'+teks+'</span>';
+      o.appendChild(lab);
+    });
+  }else{
+    soal.o.forEach((teks,i)=>{
+      const b=document.createElement('div');b.className='bs-baris';
+      b.innerHTML='<p><b>'+(i+1)+'.</b> '+teks+'</p><div class="bs-pilih" role="radiogroup" aria-label="Pernyataan '+(i+1)+'"><label class="op"><input type="radio" name="bs'+i+'" value="1"><span class="teks">Benar</span></label><label class="op"><input type="radio" name="bs'+i+'" value="0"><span class="teks">Salah</span></label></div>';
+      o.appendChild(b);
+    });
+  }
+  const u=$('#umpan');u.hidden=true;u.innerHTML='';
+  $('#btnKunci').hidden=false;$('#btnKunci').disabled=true;
+  $('#btnLanjut').hidden=true;
+  $$('.lv').forEach(e=>e.classList.toggle('kini',+e.dataset.lv===lv));
+  aktifkan(pi);rel();
+  $('#tanya').focus({preventScroll:true});
+}
+
+function siap(){
+  const s=cur().soal,o=$('#opsi');
+  if(s.t==='pg')return !!$('input:checked',o);
+  if(s.t==='kx')return $$('input:checked',o).length>0;
+  return s.o.every((_,i)=>$('input[name="bs'+i+'"]:checked',o));
+}
+
+function tandai(el,cls,teks){
+  el.classList.add(cls);
+  el.querySelector('.teks').insertAdjacentHTML('beforeend','<span class="cap">'+teks+'</span>');
+}
+
+function gerak(pi,ok){
+  const p=S.pl[pi],lama=p.pos,naik=LEVEL[cur().lv].naik;
+  p.pos=Math.max(0,Math.min(100,lama+(ok?naik:-SLIP)));
+  const e=$('#pm'+(pi+1));
+  e.classList.remove('aktif','naik','licin');
+  void e.offsetWidth;
+  e.classList.add(ok?'naik':'licin');
+  e.style.setProperty('--p',p.pos);
+  const lama2=e.querySelector('.seru');if(lama2)lama2.remove();
+  const b=document.createElement('span');
+  const puncak=p.pos===100&&lama<100;
+  b.className='seru '+(ok?'ok':'no');
+  b.textContent=puncak?'PUNCAK!':(ok?'MANTAP!':'LICIN!');
+  e.appendChild(b);
+  setTimeout(()=>{if(b.parentNode)b.remove()},1700);
+  $('#hud'+(pi+1)).classList.remove('aktif');
+  hud();
+  return p.pos-lama;
+}
+
+function kunci(){
+  if(!S||S.fase!=='tanya'||!siap())return;
+  S.fase='jawab';
+  const {pi,soal}=cur(),o=$('#opsi');
+  let ok;
+  $$('input',o).forEach(i=>{i.disabled=true});
+  if(soal.t==='pg'){
+    const pil=+$('input:checked',o).value;ok=pil===soal.k;
+    $$('.op',o).forEach((el,i)=>{
+      if(i===soal.k)tandai(el,'benar','Jawaban benar');
+      else if(i===pil)tandai(el,'salah','Pilihanmu kurang tepat');
+    });
+  }else if(soal.t==='kx'){
+    const pil=$$('input:checked',o).map(i=>+i.value);
+    ok=pil.length===soal.k.length&&soal.k.every(i=>pil.includes(i));
+    $$('.op',o).forEach((el,i)=>{
+      const bn=soal.k.includes(i),dp=pil.includes(i);
+      if(bn&&dp)tandai(el,'benar','Dipilih dengan tepat');
+      else if(bn)tandai(el,'terlewat','Seharusnya dipilih');
+      else if(dp)tandai(el,'salah','Seharusnya tidak dipilih');
+    });
+  }else{
+    ok=true;
+    $$('.bs-baris',o).forEach((row,i)=>{
+      const pil=$('input:checked',row).value==='1';
+      const bn=soal.k[i]===pil;if(!bn)ok=false;
+      row.classList.add(bn?'benar':'salah');
+      row.insertAdjacentHTML('beforeend','<span class="cap">'+(bn?'Jawabanmu tepat: ':'Jawaban yang benar: ')+(soal.k[i]?'Benar':'Salah')+'</span>');
+    });
+  }
+  S.hasil[S.t]=ok;
+  if(ok)S.pl[pi].benar++;
+  const d=gerak(pi,ok);
+  const nama=esc(S.pl[pi].nama);
+  let kepala;
+  if(ok)kepala=d>0?'MANTAP! '+nama+' naik '+fmt(d/10)+' m.':'MANTAP! '+nama+' sudah di puncak.';
+  else kepala=d<0?'LICIN! '+nama+' merosot '+fmt(-d/10)+' m.':'LICIN! '+nama+' tetap di dasar pinang.';
+  const u=$('#umpan');
+  u.className='umpan '+(ok?'ok':'no');
+  u.innerHTML='<h4>'+kepala+'</h4><p><b>Pembahasan.</b> '+soal.p+'</p>';
+  u.hidden=false;
+  $('#btnKunci').hidden=true;
+  const bl=$('#btnLanjut');bl.hidden=false;
+  bl.textContent=S.t>=19?'Lihat Hasil':'Soal Berikutnya';
+  rel();
+  if(ok)bunyiBenar();else bunyiSalah();
+  if(S.pl[pi].pos===100&&ok)setTimeout(bunyiMenang,450);
+  if(sempit()){
+    $('#arena').scrollIntoView({behavior:reduce?'auto':'smooth',block:'center'});
+    setTimeout(()=>{if(S&&S.fase==='jawab')u.scrollIntoView({behavior:reduce?'auto':'smooth',block:'nearest'})},1900);
+  }
+}
+
+function lanjut(){
+  if(!S||S.fase!=='jawab')return;
+  S.t++;
+  if(S.t>=20){selesai();return}
+  tanya();
+  if(sempit())$('#panelSoal').scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'});
+}
+
+function juaraIndeks(){
+  const [a,b]=S.pl;
+  if(a.pos!==b.pos)return a.pos>b.pos?0:1;
+  if(a.benar!==b.benar)return a.benar>b.benar?0:1;
+  return -1;
+}
+
+function selesai(){
+  S.fase='selesai';
+  aktifkan(-1);
+  $$('.lv').forEach(e=>e.classList.remove('kini'));
+  tampil('panelHasil');
+  const j=juaraIndeks(),[a,b]=S.pl;
+  const J=$('#juara');
+  if(j>=0){
+    const w=S.pl[j];
+    const sama=a.pos===b.pos;
+    J.innerHTML='<span class="kecil">JUARA PANJAT PINANG</span><span class="nama">'+esc(w.nama)+'</span><span class="ket">Kelas '+esc(w.kelas)+' · '+meter(w.pos)+' m dari 10 m · '+w.benar+' dari 10 benar'+(w.pos===100?' · meraih hadiah di puncak':'')+(sama?' · tinggi sama, juara ditentukan dari jumlah jawaban benar':'')+'</span>';
+    bunyiMenang();
+  }else{
+    J.innerHTML='<span class="kecil">HASIL AKHIR</span><span class="nama">Seri!</span><span class="ket">Keduanya setinggi '+meter(a.pos)+' m dengan '+a.benar+' jawaban benar.</span>';
+    bunyiBenar();
+  }
+  let baris='';
+  for(let l=0;l<5;l++){
+    const sel=pi=>[0,1].map(k=>{
+      const h=S.hasil[l*4+pi+k*2];
+      return '<span class="mk '+(h?'ok':'no')+'" role="img" aria-label="'+(h?'Benar':'Salah')+'">'+(h?'✓':'✕')+'</span>';
+    }).join('');
+    baris+='<tr><th scope="row">Level '+(l+1)+'</th><td>'+sel(0)+'</td><td>'+sel(1)+'</td></tr>';
+  }
+  $('#rekap').innerHTML='<thead><tr><th>&nbsp;</th><th>'+esc(a.nama)+'<br><small>Kelas '+esc(a.kelas)+' · P1</small></th><th>'+esc(b.nama)+'<br><small>Kelas '+esc(b.kelas)+' · P2</small></th></tr></thead><tbody>'+baris+'<tr><th scope="row">Benar</th><td class="num">'+a.benar+' dari 10</td><td class="num">'+b.benar+' dari 10</td></tr><tr><th scope="row">Tinggi</th><td class="num">'+meter(a.pos)+' m</td><td class="num">'+meter(b.pos)+' m</td></tr></tbody>';
+  $('#salinArea').hidden=true;
+  konfeti();
+  $('#panelHasil').scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'});
+}
+
+function teksHasil(){
+  const [a,b]=S.pl,j=juaraIndeks();
+  return ['PANJAT PINANG SARAF - Hasil Lomba',
+    j>=0?'Juara: '+S.pl[j].nama+' (Kelas '+S.pl[j].kelas+')':'Hasil: Seri',
+    'Pemain 1: '+a.nama+' (Kelas '+a.kelas+') - '+a.benar+'/10 benar, tinggi '+meter(a.pos)+' m',
+    'Pemain 2: '+b.nama+' (Kelas '+b.kelas+') - '+b.benar+'/10 benar, tinggi '+meter(b.pos)+' m'].join('\n');
+}
+
+function konfeti(){
+  if(reduce)return;
+  const c=$('#konfeti'),x=c.getContext('2d');
+  c.width=innerWidth;c.height=innerHeight;
+  const warna=['#D3202A','#FFFFFF','#FFC72C','#1565B5','#4EA94B'];
+  const P=Array.from({length:130},()=>({x:Math.random()*c.width,y:-20-Math.random()*c.height*.6,w:6+Math.random()*6,h:8+Math.random()*8,vy:2+Math.random()*3.5,vx:-1+Math.random()*2,r:Math.random()*6,vr:-.2+Math.random()*.4,c:warna[(Math.random()*warna.length)|0]}));
+  let f=0;
+  (function loop(){
+    x.clearRect(0,0,c.width,c.height);
+    P.forEach(p=>{
+      p.x+=p.vx;p.y+=p.vy;p.r+=p.vr;
+      x.save();x.translate(p.x,p.y);x.rotate(p.r);
+      x.fillStyle=p.c;x.strokeStyle='#1B2638';x.lineWidth=1;
+      x.fillRect(-p.w/2,-p.h/2,p.w,p.h);x.strokeRect(-p.w/2,-p.h/2,p.w,p.h);
+      x.restore();
+    });
+    f++;
+    if(f<240)requestAnimationFrame(loop);else x.clearRect(0,0,c.width,c.height);
+  })();
+}
+
+/* ---------- Pemasangan ---------- */
+bangunArena();
+hud();
+['nama1','kelas1','nama2','kelas2'].forEach(id=>$('#'+id).addEventListener('input',()=>{if(!S)hud()}));
+
+$('#form').addEventListener('submit',e=>{
+  e.preventDefault();initAudio();
+  const v=id=>$('#'+id).value.trim().replace(/\s+/g,' ');
+  const g=$('#galat');
+  const kosong=['nama1','kelas1','nama2','kelas2'].find(id=>!v(id));
+  if(kosong){g.textContent='Isi nama dan kelas kedua pemain terlebih dahulu.';g.hidden=false;$('#'+kosong).focus();return}
+  const d=[{nama:v('nama1'),kelas:v('kelas1')},{nama:v('nama2'),kelas:v('kelas2')}];
+  if(d[0].nama.toLowerCase()===d[1].nama.toLowerCase()&&d[0].kelas.toLowerCase()===d[1].kelas.toLowerCase()){
+    g.textContent='Nama dan kelas kedua pemain sama. Tambahkan inisial atau nama belakang agar bisa dibedakan.';g.hidden=false;$('#nama2').focus();return;
+  }
+  g.hidden=true;mulai(d);
+});
+$('#opsi').addEventListener('change',()=>{
+  $$('.op',$('#opsi')).forEach(l=>{const i=l.querySelector('input');l.classList.toggle('dipilih',i.checked)});
+  $('#btnKunci').disabled=!siap();
+});
+$('#btnKunci').addEventListener('click',kunci);
+$('#btnLanjut').addEventListener('click',lanjut);
+$('#btnUlang').addEventListener('click',()=>{if(S)mulai(S.pl.map(p=>({nama:p.nama,kelas:p.kelas})))});
+$('#btnGanti').addEventListener('click',()=>{
+  S=null;aktifkan(-1);
+  [1,2].forEach(n=>{const e=$('#pm'+n);e.classList.remove('naik','licin');e.style.setProperty('--p',0)});
+  $$('.lv').forEach(e=>e.classList.remove('kini'));
+  hud();tampil('panelMulai');
+  $('#nama1').focus({preventScroll:true});
+  window.scrollTo({top:0,behavior:reduce?'auto':'smooth'});
+});
+$('#btnSalin').addEventListener('click',()=>{
+  const t=teksHasil(),a=$('#salinArea');
+  a.value=t;
+  const tampilkan=()=>{a.hidden=false;a.focus();a.select()};
+  try{navigator.clipboard.writeText(t).then(()=>{$('#btnSalin').textContent='Tersalin';setTimeout(()=>{$('#btnSalin').textContent='Salin Hasil'},1800)}).catch(tampilkan)}catch(e){tampilkan()}
+});
+$('#btnSuara').addEventListener('click',()=>{
+  suaraOn=!suaraOn;
+  const b=$('#btnSuara');
+  b.textContent='Suara: '+(suaraOn?'Nyala':'Mati');
+  b.setAttribute('aria-pressed',String(suaraOn));
+  if(suaraOn){initAudio();bunyiBenar()}
+});
+})();
+</script>
+
+</body></html>
